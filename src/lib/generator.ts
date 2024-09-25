@@ -3,8 +3,14 @@ import {type ProcessedShowEntry, showEntriesToNumerical} from "@/lib/helper";
 import {evaluateScoreDistance, evaluateSingleEntry} from "@/lib/evaluator";
 
 
+function l<T>(msg: any, val: T): T {
+  console.log(msg, val)
+  return val
+}
 
-function bestLimitedDepth(depthLeft: number, lastEventUse: number[], lastPersonUse: number[], entriesLeft: ProcessedShowEntry[], setEntries: (ProcessedShowEntry | null)[], currentIndex: number = 0): [ProcessedShowEntry[], number] {
+
+
+function bestLimitedDepth(depthLeft: number, lastEventUse: number[], lastPersonUse: number[], entriesLeft: ProcessedShowEntry[], setEntries: (ProcessedShowEntry | null)[], currentIndex: number): [ProcessedShowEntry[], number] {
   if(depthLeft == 0){
     let eventCount: {[event: number]: number} = {}
     let peopleCount: {[person: number]: number} = {}
@@ -55,15 +61,15 @@ function bestLimitedDepth(depthLeft: number, lastEventUse: number[], lastPersonU
         const spacingFromLastUsed: number = setEntries.length - lastUsePos
         const intervalFromLastUsed: number = (spacingFromLastUsed - 1) / count
         if(lastUsePos + intervalFromLastUsed >= currentIndex){
-          score += evaluateScoreDistance(intervalFromLastUsed) * count
+          score += l("event: " + event, evaluateScoreDistance(intervalFromLastUsed) * count)
         }else{
           // const normalInterval = (eventCount[event] > 1) ? (totalEntriesLeft - 1) / (eventCount[event] - 1) : intervalFromLastUsed
           const normalInterval = (totalEntriesLeft - 1) / (count- 1)
-          score += evaluateScoreDistance(currentIndex - count) + evaluateScoreDistance(normalInterval) * (count - 1)
+          score += l("event: " + event, evaluateScoreDistance(currentIndex - lastUsePos) + evaluateScoreDistance(normalInterval) * (count - 1))
         }
       }else if(count > 1) {
         const normalInterval = (totalEntriesLeft - 1) / (count - 1)
-        score += evaluateScoreDistance(normalInterval) * (count - 1)
+        score += l("event: " + event, evaluateScoreDistance(normalInterval) * (count - 1))
       }
     }
     for(let person in peopleCount) {
@@ -73,15 +79,15 @@ function bestLimitedDepth(depthLeft: number, lastEventUse: number[], lastPersonU
         const spacingFromLastUsed: number = setEntries.length - lastUsePos
         const intervalFromLastUsed: number = (spacingFromLastUsed - 1) / count
         if(lastUsePos + intervalFromLastUsed >= currentIndex){
-          score += evaluateScoreDistance(intervalFromLastUsed) * count
+          score += l("person: " + person, evaluateScoreDistance(intervalFromLastUsed) * count)
         }else{
           // const normalInterval = (eventCount[event] > 1) ? (totalEntriesLeft - 1) / (eventCount[event] - 1) : intervalFromLastUsed
           const normalInterval = (totalEntriesLeft - 1) / (count- 1)
-          score += evaluateScoreDistance(currentIndex - count) + evaluateScoreDistance(normalInterval) * (count - 1)
+          score += l("person: " + person, evaluateScoreDistance(currentIndex - lastUsePos) + evaluateScoreDistance(normalInterval) * (count - 1))
         }
       }else if(count > 1) {
         const normalInterval = (totalEntriesLeft - 1) / (count - 1)
-        score += evaluateScoreDistance(normalInterval) * (count - 1)
+        score += l("person: " + person, evaluateScoreDistance(normalInterval) * (count - 1))
       }
     }
 
@@ -180,7 +186,7 @@ export function generateShow(entries: ShowEntry[]) {
 
   const DEPTH = 1
   for(let showIndex = 0; showIndex <= show.length - DEPTH; showIndex++){
-    const [resultShow, resultScore] = bestLimitedDepth(DEPTH, lastEventUsed, lastPersonUsed, preparedEntries, show)
+    const [resultShow, resultScore] = bestLimitedDepth(DEPTH, lastEventUsed, lastPersonUsed, preparedEntries, show, showIndex)
     console.log(showIndex, resultShow, resultScore)
 
     output.push(resultShow[0])
