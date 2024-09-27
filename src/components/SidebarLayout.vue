@@ -79,8 +79,8 @@
         <!-- Separator -->
         <div class="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
 
-        <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-          <h1 class="text-black text-2xl font-bold py-3">Jump Rope Show Creator</h1>
+        <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 overflow-hidden">
+          <h1 class="text-black text-2xl font-bold py-3 text-nowrap">Jump Rope Show Creator</h1>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import {
   Dialog,
@@ -104,16 +104,16 @@ import {
 import {
   Bars3Icon,
   HomeIcon,
-  UsersIcon,
   XMarkIcon,
-  QueueListIcon
+  QueueListIcon,
+    QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline'
 import {useRoute} from "vue-router";
 
 const navigation = [
   { name: 'Show', href: '/', icon: HomeIcon },
   { name: 'Entries', href: '/entries', icon: QueueListIcon },
-  // { name: 'People', href: '/people', icon: UsersIcon },
+  { name: 'About', href: '/about', icon: QuestionMarkCircleIcon },
 ]
 
 const currentRoute = useRoute()

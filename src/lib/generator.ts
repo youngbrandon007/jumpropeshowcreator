@@ -1,147 +1,57 @@
 import type {ShowEntry} from "@/stores/show";
 import {type ProcessedShowEntry, showEntriesToNumerical} from "@/lib/helper";
-import {evaluateScoreDistance, evaluateSingleEntry} from "@/lib/evaluator";
+import {evaluateProcessedEntries} from "@/lib/evaluator";
 
 
-function l<T>(msg: any, val: T): T {
-  console.log(msg, val)
-  return val
+export function generateRandomShow(setEntries: (ProcessedShowEntry | null)[], entriesLeft: ProcessedShowEntry[]): ProcessedShowEntry[] {
+  const output: ProcessedShowEntry[] = []
+  const newEntriesLeft = entriesLeft.map(entry => entry)
+
+  const randomArray = crypto.getRandomValues(new Uint32Array(setEntries.length));
+  for(let i = 0; i < setEntries.length; i++) {
+    if(setEntries[i] !== null) {
+      output.push(setEntries[i]!);
+    }else{
+      const randomIndex = Math.floor(randomArray[0] * newEntriesLeft.length / (2**32));
+      // console.log(randomIndex)
+      output.push(newEntriesLeft.splice(randomIndex, 1)[0]);
+    }
+  }
+
+  return output
 }
 
 
-
-function bestLimitedDepth(depthLeft: number, lastEventUse: number[], lastPersonUse: number[], entriesLeft: ProcessedShowEntry[], setEntries: (ProcessedShowEntry | null)[], currentIndex: number): [ProcessedShowEntry[], number] {
-  if(depthLeft == 0){
-    let eventCount: {[event: number]: number} = {}
-    let peopleCount: {[person: number]: number} = {}
-
-    let totalEntriesLeft = 0
-
-    entriesLeft.forEach(entry => {
-      if(eventCount.hasOwnProperty(entry[1])) {
-        eventCount[entry[1]] += 1
-      }else{
-        eventCount[entry[1]] = 1;
-      }
-      for(let i = 3; i < entry.length; i++) {
-        if(peopleCount.hasOwnProperty(entry[i])) {
-          peopleCount[entry[i]] += 1
-        }else{
-          peopleCount[entry[i]] = 1;
-        }
-      }
-      totalEntriesLeft += 1
-    })
-
-    for(let i = currentIndex; i<setEntries.length; i++){
-      if(setEntries[i] !== null){
-        const entry = setEntries[i]!
-
-        if(eventCount.hasOwnProperty(entry[1])) {
-          eventCount[entry[1]] += 1
-        }else{
-          eventCount[entry[1]] = 1;
-        }
-        for(let i = 3; i < entry.length; i++) {
-          if(peopleCount.hasOwnProperty(entry[i])) {
-            peopleCount[entry[i]] += 1
-          }else{
-            peopleCount[entry[i]] = 1;
-          }
-        }
-      }
-      totalEntriesLeft += 1
-    }
-
-    let score = 0
-    for(let event in eventCount) {
-      const lastUsePos = lastEventUse[event]
-      const count = eventCount[event]
-      if(lastUsePos !== -1) {
-        const spacingFromLastUsed: number = setEntries.length - lastUsePos
-        const intervalFromLastUsed: number = (spacingFromLastUsed - 1) / count
-        if(lastUsePos + intervalFromLastUsed >= currentIndex){
-          score += l("event: " + event, evaluateScoreDistance(intervalFromLastUsed) * count)
-        }else{
-          // const normalInterval = (eventCount[event] > 1) ? (totalEntriesLeft - 1) / (eventCount[event] - 1) : intervalFromLastUsed
-          const normalInterval = (totalEntriesLeft - 1) / (count- 1)
-          score += l("event: " + event, evaluateScoreDistance(currentIndex - lastUsePos) + evaluateScoreDistance(normalInterval) * (count - 1))
-        }
-      }else if(count > 1) {
-        const normalInterval = (totalEntriesLeft - 1) / (count - 1)
-        score += l("event: " + event, evaluateScoreDistance(normalInterval) * (count - 1))
-      }
-    }
-    for(let person in peopleCount) {
-      const lastUsePos = lastPersonUse[person]
-      const count = peopleCount[person]
-      if(lastUsePos !== -1) {
-        const spacingFromLastUsed: number = setEntries.length - lastUsePos
-        const intervalFromLastUsed: number = (spacingFromLastUsed - 1) / count
-        if(lastUsePos + intervalFromLastUsed >= currentIndex){
-          score += l("person: " + person, evaluateScoreDistance(intervalFromLastUsed) * count)
-        }else{
-          // const normalInterval = (eventCount[event] > 1) ? (totalEntriesLeft - 1) / (eventCount[event] - 1) : intervalFromLastUsed
-          const normalInterval = (totalEntriesLeft - 1) / (count- 1)
-          score += l("person: " + person, evaluateScoreDistance(currentIndex - lastUsePos) + evaluateScoreDistance(normalInterval) * (count - 1))
-        }
-      }else if(count > 1) {
-        const normalInterval = (totalEntriesLeft - 1) / (count - 1)
-        score += l("person: " + person, evaluateScoreDistance(normalInterval) * (count - 1))
-      }
-    }
-
-    console.log("Evaluated", entriesLeft, score)
-
-    return [[], score]
-  }
-  if(currentIndex >= setEntries.length){
-    return [[], 0]
+export function findNextBestIndexRandomly(setEntries: (ProcessedShowEntry | null)[], index: number, entriesLeft: ProcessedShowEntry[], randomCount: number, numberEvents: number, numberPeople: number): number {
+  if(setEntries[index] !== null) {
+    throw Error("Internal Error in findNextBestIndexRandomly()")
   }
 
-  let bestScore = 0;
-  let bestSequence: ProcessedShowEntry[] = []
+  let bestScore = -1
+  let bestIndex = -1
 
-  for(let i = -1; i < entriesLeft.length; i++) {
+  for(let chooseIndex = 0; chooseIndex < entriesLeft.length; chooseIndex++){
+    const newSetEntries = setEntries.map(entry => entry)
+    newSetEntries[index] = entriesLeft[chooseIndex]
+    const newEntriesLeft = entriesLeft.filter((entry, index) => index !== chooseIndex)
 
-    let newEntry: ProcessedShowEntry = []
-    let newEntriesLeft: ProcessedShowEntry[] = []
-    if(i === -1) {
-      if(setEntries[currentIndex] === null) continue;
+    let totalScore = 0
 
-      newEntry = setEntries[currentIndex]!
-      newEntriesLeft = entriesLeft
-    }else {
-      if(setEntries[currentIndex] !== null) break;
+    for(let i = 0; i < randomCount; i++) {
+      const randomShow = generateRandomShow(newSetEntries, newEntriesLeft)
 
-      newEntry = entriesLeft[i]
-      newEntriesLeft = entriesLeft.slice(0, i).concat(entriesLeft.slice(i + 1));
+      const score = evaluateProcessedEntries(randomShow, Array(numberEvents).fill(-1), Array(numberPeople).fill(-1))
+
+      totalScore += score
     }
 
-    const newScore = evaluateSingleEntry(newEntry, lastEventUse, lastPersonUse, currentIndex)
-
-    const prevEventUse = lastEventUse[newEntry[2]]
-    lastEventUse[newEntry[2]] = currentIndex
-    let prevPeopleUse: number[] = []
-    for(let j = 3; j < newEntry.length; j++) {
-      prevPeopleUse.push(lastPersonUse[newEntry[j]])
-      lastPersonUse[newEntry[j]] = currentIndex
-    }
-
-    const [newSeq, newSeqScore] = bestLimitedDepth(depthLeft - 1, lastEventUse, lastPersonUse, newEntriesLeft, setEntries, currentIndex + 1)
-
-    lastEventUse[newEntry[2]] = prevEventUse
-    for(let j = 3; j < newEntry.length; j++) {
-      lastPersonUse[newEntry[j]] = prevPeopleUse[j-3]
-    }
-
-    if(newSeqScore + newScore > bestScore) {
-      bestSequence = [newEntry].concat(newSeq)
-      bestScore = newSeqScore + newScore
+    if(totalScore > bestScore) {
+      bestScore = totalScore
+      bestIndex = chooseIndex
     }
   }
 
-  return [bestSequence, bestScore]
+  return bestIndex
 }
 
 
@@ -177,39 +87,29 @@ export function generateShow(entries: ShowEntry[]) {
     }
   }
 
+  const RANDOM_COUNT = 100
+
   const startTime = performance.now()
 
-  const lastEventUsed = Array(allEvents.size).fill(-1)
-  const lastPersonUsed = Array(allPeople.size).fill(-1)
+  for(let i = 0; i < show.length; i++){
+    if(show[i] === null) {
+      const nextIndex = findNextBestIndexRandomly(show, i, preparedEntries, RANDOM_COUNT, allEvents.size, allPeople.size)
 
-  const output = []
-
-  const DEPTH = 1
-  for(let showIndex = 0; showIndex <= show.length - DEPTH; showIndex++){
-    const [resultShow, resultScore] = bestLimitedDepth(DEPTH, lastEventUsed, lastPersonUsed, preparedEntries, show, showIndex)
-    console.log(showIndex, resultShow, resultScore)
-
-    output.push(resultShow[0])
-    lastEventUsed[resultShow[0][0]] = showIndex
-    for(let i = 3; i < resultShow[0].length; i++) {
-      lastPersonUsed[resultShow[0][i]] = showIndex
-    }
-    preparedEntries.splice(preparedEntries.indexOf(resultShow[0]), 1)
-
-    if(showIndex == show.length - DEPTH) {
-      show[showIndex] = resultShow[0]
+      show[i] = preparedEntries.splice(nextIndex, 1)[0]
     }
   }
 
-
   const duration = performance.now() - startTime
 
-  console.log(duration)
-  console.log(output)
+  console.log("Created show in " + duration.toFixed(3) + " ms.")
 
+  const result = show.map<ShowEntry>(entry => {
+    return entries[entry![0]]
+  })
 
   return {
     allPeople, personToIndex, indexToPerson,
     allEvents, eventToIndex, indexToEvent,
+    result
   }
 }

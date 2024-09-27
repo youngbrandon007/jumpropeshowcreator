@@ -16,7 +16,7 @@ export function evaluateProcessedEntries(processedEntries : ProcessedShowEntry[]
   processedEntries.forEach((entry, arrayIndex) => {
     const entryIndex = arrayIndex + startingIndex
 
-    score += evaluateSingleEntry(entry, lastEventUse, lastPersonUse, startingIndex)
+    score += evaluateSingleEntry(entry, lastEventUse, lastPersonUse, entryIndex)
 
     const eventIndex = entry[1]
     lastEventUse[eventIndex] = entryIndex
@@ -50,7 +50,9 @@ export function evaluateSingleEntry(processedEntry: ProcessedShowEntry, lastEven
 
 // Must work for fractional values
 export function evaluateScoreDistance(dis: number) {
-  return Math.sqrt(Math.abs(dis))
+  // return Math.sqrt(Math.abs(dis))
+  return Math.log2(Math.abs(dis))
+  // return 1-Math.exp(-.25*Math.abs(dis))
 }
 
 

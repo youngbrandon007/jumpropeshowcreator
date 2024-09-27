@@ -40,7 +40,7 @@ export const useShowStore = defineStore('show', () => {
   function generate() {
     const generatedShow = generateShow(show.value)
 
-    console.log(generatedShow)
+    show.value = generatedShow.result
   }
 
   return {show, reset, generate}
