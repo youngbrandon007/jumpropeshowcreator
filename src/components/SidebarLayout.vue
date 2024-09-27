@@ -80,7 +80,7 @@
         <div class="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
 
         <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 overflow-hidden">
-          <h1 class="text-black text-2xl font-bold py-3 text-nowrap">Jump Rope Show Creator</h1>
+          <h1 class="text-black text-2xl font-bold py-3 text-nowrap">Show Sequence Creator</h1>
         </div>
       </div>
 
