@@ -11,6 +11,7 @@
         <div class="my-4"></div>
         <h2 class="text-base font-semibold leading-6 text-gray-900">Suggestions</h2>
         <p class="mt-2 text-sm text-gray-700">If you have any suggestions feel free to send them to <a class="rounded-md bg-white px-1 py-1 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" href="mailto:youngbrandon007@gmail.com">youngbrandon007@gmail.com</a>.</p>
+        <div class="my-4"></div>
         <h2 class="text-base font-semibold leading-6 text-gray-900">Contribute</h2>
         <p class="mt-2 text-sm text-gray-700">If you would like to contribute or check out how this was made look <a class="rounded-md bg-white px-1 py-1 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" href="https://github.com/youngbrandon007/sequencecreator">https://github.com/youngbrandon007/sequencecreator</a>.</p>
 

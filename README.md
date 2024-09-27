@@ -1,4 +1,4 @@
-# Jump Rope Show Creator
+# Sequence Creator
 
 This is the vue.js project for the [sequencecreator.com](https://sequencecreator.com).
 
