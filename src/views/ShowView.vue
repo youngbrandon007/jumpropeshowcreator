@@ -12,7 +12,7 @@ const show = useShowStore()
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-base font-semibold leading-6 text-gray-900">Show</h1>
-        <p class="mt-2 text-sm text-gray-700">First go to the <TabReference to="/entries">Entries</TabReference> tab and add the entries to your show.</p>
+        <p class="mt-2 text-sm text-gray-700">First go to the <TabReference to="/entries">Entries</TabReference> tab and add the entries to your show. Then click 'Import Entries and Reset Show' to load in your entries from the other tab. Then click 'Generate' to create an order where like event types and people are spaced out.</p>
       </div>
     </div>
     <div class="mt-8 flow-root">
@@ -21,7 +21,7 @@ const show = useShowStore()
 
           <div class="flex flex-row justify-center p-2 gap-2">
             <button type="button" @click="show.reset(entries.getProcessedValue())" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Import Entries and Reset Show</button>
-            <button type="button" @click="show.generate()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Regenerate</button>
+            <button type="button" @click="show.generate()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate</button>
           </div>
           <table class="min-w-full divide-y divide-gray-300">
             <thead>

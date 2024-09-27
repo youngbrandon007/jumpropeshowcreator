@@ -106,14 +106,14 @@ import {
   HomeIcon,
   XMarkIcon,
   QueueListIcon,
-    QuestionMarkCircleIcon,
+  ListBulletIcon,
 } from '@heroicons/vue/24/outline'
 import {useRoute} from "vue-router";
 
 const navigation = [
-  { name: 'Show', href: '/', icon: HomeIcon },
-  { name: 'Entries', href: '/entries', icon: QueueListIcon },
-  { name: 'About', href: '/about', icon: QuestionMarkCircleIcon },
+  { name: 'About', href: '/', icon: HomeIcon },
+  { name: 'Entries', href: '/entries', icon: ListBulletIcon },
+  { name: 'Show', href: '/show', icon: QueueListIcon },
 ]
 
 const currentRoute = useRoute()

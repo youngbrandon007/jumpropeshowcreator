@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {computed, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import * as Papa from "papaparse"
 
@@ -18,16 +18,45 @@ export type ProcessedEntry = {
   percentage: number | null;
 }
 
+const DEFAULT_ENTRIES: Entry[] = [
+  {
+    name: "Bob's Part",
+    event: "jumprope",
+    people: "Bob",
+    percentage: "",
+  },
+  {
+    name: "",
+    event: "yoyo",
+    people: "Joe, John",
+    percentage: "",
+  },
+  {
+    name: "",
+    event: "dance",
+    people: "Joe",
+    percentage: "100",
+  },
+  {
+    name: "",
+    event: "dance",
+    people: "Billy, John",
+    percentage: "",
+  },
+  {
+    name: "",
+    event: "singing",
+    people: "Amy",
+    percentage: "",
+  }
+]
+
+
 export const useEntryStore = defineStore('entries', () => {
 
-  let savedValue: Entry[] = []
-  try{
-    savedValue = JSON.parse(localStorage.getItem("entries") ?? "[]") as Entry[]
-  }catch(e) {
-    console.error(e)
-  }
+  let initValue: Entry[] = JSON.parse(localStorage.getItem("entries") ?? "null") ?? DEFAULT_ENTRIES as Entry[]
 
-  const entries = ref<Entry[]>(savedValue)
+  const entries = ref<Entry[]>(initValue)
 
   watch(entries, (newValue) => {
     localStorage.setItem("entries", JSON.stringify(newValue));
