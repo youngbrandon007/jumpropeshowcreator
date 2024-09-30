@@ -1,13 +1,14 @@
 <script setup lang="ts">
-
 import {useEntryStore} from "@/stores/entries";
 import InputText from "@/components/InputText.vue";
 import {
   TrashIcon
 } from '@heroicons/vue/24/outline'
-import DeleteDialog from "@/components/DeleteDialog.vue";
+import DeleteDialog from "@/components/DialogDelete.vue";
 import {ref} from "vue";
 import TabReference from "@/components/TabReference.vue";
+import ButtonSolid from "@/components/ButtonSolid.vue";
+import InputFile from "@/components/InputFile.vue";
 
 const entries = useEntryStore()
 
@@ -23,17 +24,8 @@ const deleteDialogRow = ref<number>(0)
         <p class="mt-2 text-sm text-gray-700">Enter all the entries in your show including their title, event type, and people. These can be in any order. Show Sequence Creator does not save anything for you! Download your entries to get them back later. When you are done adding your entries go to the <TabReference to="/show">Show</TabReference> tab to generate an order that spaces out items in your show.</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex flex-row gap-2">
-        <div class="flex justify-center rounded-md border border-dashed border-gray-900/25 px-6 py-2">
-          <div class="text-center">
-            <div class="flex text-sm leading-6 text-gray-600">
-              <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                <span>Upload csv file</span>
-                <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="entries.uploadCsv" />
-              </label>
-            </div>
-          </div>
-        </div>
-        <button type="button" @click="entries.downloadCsv()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Download</button>
+        <InputFile @change="entries.uploadCsv">Upload csv file</InputFile>
+        <ButtonSolid type="button" @click="entries.downloadCsv()">Download</ButtonSolid>
       </div>
     </div>
     <div class="mt-8 flow-root">
@@ -79,7 +71,7 @@ const deleteDialogRow = ref<number>(0)
             </tbody>
           </table>
           <div class="flex flex-row justify-center p-2">
-            <button type="button" @click="entries.addEntry" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add entry</button>
+            <ButtonSolid @click="entries.addEntry">Add entry</ButtonSolid>
           </div>
         </div>
       </div>

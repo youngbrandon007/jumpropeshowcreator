@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+
+const open = defineModel<boolean>("showing", { default: false })
+
+const emits = defineEmits<{ (e: 'delete'): void}>()
+</script>
+
 <template>
   <TransitionRoot as="template" :show="open">
     <Dialog class="relative z-10" @close="open = false">
@@ -31,12 +40,3 @@
     </Dialog>
   </TransitionRoot>
 </template>
-
-<script setup lang="ts">
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
-
-const open = defineModel<boolean>("showing")
-
-const emits = defineEmits<{ (e: 'delete'): void}>()
-</script>

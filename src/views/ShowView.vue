@@ -2,6 +2,7 @@
 import {useEntryStore} from "@/stores/entries";
 import {useShowStore} from "@/stores/show";
 import TabReference from "@/components/TabReference.vue";
+import ButtonSolid from "@/components/ButtonSolid.vue";
 
 const entries = useEntryStore()
 const show = useShowStore()
@@ -20,10 +21,10 @@ const show = useShowStore()
         <div class="inline-block min-w-full py-2 align-middle">
 
           <div class="flex flex-row justify-center p-2 gap-2">
-            <button type="button" @click="show.reset(entries.getProcessedValue())" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Import Entries and Reset Show</button>
-            <button type="button" @click="show.generate()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate</button>
+            <ButtonSolid @click="show.reset(entries.getProcessedValue())">Import Entries and Reset Show</ButtonSolid>
+            <ButtonSolid @click="show.generate()">Generate</ButtonSolid>
             <div class="grow"></div>
-            <button type="button" @click="show.downloadCsv()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Download</button>
+            <ButtonSolid @click="show.downloadCsv()">Download</ButtonSolid>
 
           </div>
           <table class="min-w-full divide-y divide-gray-300">
