@@ -20,7 +20,7 @@ const deleteDialogRow = ref<number>(0)
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-base font-semibold leading-6 text-gray-900">Entries</h1>
-        <p class="mt-2 text-sm text-gray-700">Enter all the entries in your show including their title, event type, and people. These can be in any order. Show Sequence Creator does not save anything for you! Download your entries to get them back later. When you are done adding your entries go back to the <TabReference to="/show">Show</TabReference> tab to generate an order that spaces out items in your show.</p>
+        <p class="mt-2 text-sm text-gray-700">Enter all the entries in your show including their title, event type, and people. These can be in any order. Show Sequence Creator does not save anything for you! Download your entries to get them back later. When you are done adding your entries go to the <TabReference to="/show">Show</TabReference> tab to generate an order that spaces out items in your show.</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex flex-row gap-2">
         <div class="flex justify-center rounded-md border border-dashed border-gray-900/25 px-6 py-2">

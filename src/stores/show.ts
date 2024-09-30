@@ -1,15 +1,14 @@
 import {defineStore} from "pinia";
-import type {Entry, ProcessedEntry} from "@/stores/entries";
+import type {ProcessedEntry} from "@/stores/entries";
 import {ref, watch} from "vue";
 import {generateShow} from "@/lib/generator";
+import {download, generateCsv, mkConfig} from "export-to-csv";
 
 
 export type ShowEntry = {
   title: string;
   entry: ProcessedEntry;
 }
-
-
 
 
 
@@ -43,5 +42,19 @@ export const useShowStore = defineStore('show', () => {
     show.value = generatedShow.result
   }
 
-  return {show, reset, generate}
+  function downloadCsv() {
+    const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "show" });
+
+    const csv = generateCsv(csvConfig)(show.value.map<{}>(e => {return {
+      title: e.title,
+      event: e.entry.event,
+      people: e.entry.people.reduce((s, person) => {
+        return (s.length > 0) ? s + ", " + person : person
+      }, ""),
+    }}));
+
+    download(csvConfig)(csv);
+  }
+
+  return {show, reset, generate, downloadCsv}
 })

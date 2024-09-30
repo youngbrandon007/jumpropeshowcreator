@@ -22,6 +22,9 @@ const show = useShowStore()
           <div class="flex flex-row justify-center p-2 gap-2">
             <button type="button" @click="show.reset(entries.getProcessedValue())" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Import Entries and Reset Show</button>
             <button type="button" @click="show.generate()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate</button>
+            <div class="grow"></div>
+            <button type="button" @click="show.downloadCsv()" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Download</button>
+
           </div>
           <table class="min-w-full divide-y divide-gray-300">
             <thead>

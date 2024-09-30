@@ -1,0 +1,1 @@
+import{d as t,k as n,w as r,n as s,o as a,p}from"./index-BKUdSpyx.js";const _=t({__name:"TabReference",props:{to:{}},setup(i){return(e,c)=>{const o=s("RouterLink");return a(),n(o,{to:e.to,class:"rounded-md bg-white px-1 py-1 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"},{default:r(()=>[p(e.$slots,"default")]),_:3},8,["to"])}}});export{_};
