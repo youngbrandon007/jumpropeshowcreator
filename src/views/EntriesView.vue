@@ -5,15 +5,23 @@ import {
   TrashIcon
 } from '@heroicons/vue/24/outline'
 import DeleteDialog from "@/components/DialogDelete.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import TabReference from "@/components/TabReference.vue";
 import ButtonSolid from "@/components/ButtonSolid.vue";
 import InputFile from "@/components/InputFile.vue";
+import draggable from 'vuedraggable'
 
 const entries = useEntryStore()
 
+const showingDeleteShow = ref(false)
+
 const showingDelete = ref(false)
 const deleteDialogRow = ref<number>(0)
+
+const tableRef = ref<HTMLDivElement>()
+
+onMounted(() => {
+})
 </script>
 
 <template>
@@ -31,7 +39,7 @@ const deleteDialogRow = ref<number>(0)
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle">
-          <table class="min-w-full divide-y divide-gray-300">
+          <table class="min-w-full divide-y divide-gray-300" ref="tableRef">
             <thead>
             <tr>
               <th scope="col"><span class="sr-only">Number</span></th>
@@ -46,36 +54,44 @@ const deleteDialogRow = ref<number>(0)
               </th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-              <tr v-for="(entry, index) in entries.entries" :key="index">
-                <td>{{index+1}}</td>
-                <td class="whitespace-nowrap py-2 lg:pl-4 lg:pr-3 text-sm font-medium text-gray-900">
-                  <InputText placeholder="name" :value="entry.name" @change="(newValue) => entries.updateName(index, newValue)"></InputText>
-                </td>
-                <td class="whitespace-nowrap lg:px-3 py-2 text-sm text-gray-500">
-                  <InputText placeholder="event" :value="entry.event" @change="(newValue) => entries.updateEvent(index, newValue)"></InputText>
-                </td>
-                <td class="whitespace-nowrap lg:px-3 py-2 text-sm text-gray-500">
-                  <InputText placeholder="person, person" :value="entry.people" @change="(newValue) => entries.updatePeople(index, newValue)"></InputText>
-                </td>
-                <td class="whitespace-nowrap lg:px-3 py-2 text-sm text-gray-500">
-                  <InputText placeholder="100" :value="entry.percentage" @change="(newValue) => entries.updatePercentage(index, newValue)"></InputText>
-                </td>
-                <td class="relative whitespace-nowrap lg:pl-3 lg:pr-4 text-right text-sm font-medium">
-                  <button @click="() => {deleteDialogRow = index; showingDelete = true } " tabindex="-1" class="text-red-500 hover:text-red-900"
-                  >
-                    <TrashIcon class="w-6 h-6"></TrashIcon>
-                    <span class="sr-only">Remove, {{ entry.name }}</span></button>
-                </td>
-              </tr>
-            </tbody>
+            <draggable class="divide-y divide-gray-200 bg-white" :list="entries.entries" item-key="id" tag="tbody" handle=".handle">
+              <template #item="{element, index}">
+                <tr>
+                  <td class="handle">{{index+1}}</td>
+                  <td class="whitespace-nowrap py-2 lg:pl-4 lg:pr-3 text-sm font-medium text-gray-900">
+                    <InputText placeholder="name" :value="element.name" @change="(newValue) => entries.updateName(index, newValue)"></InputText>
+                  </td>
+                  <td class="whitespace-nowrap lg:px-3 py-2 text-sm text-gray-500">
+                    <InputText placeholder="event" :value="element.event" @change="(newValue) => entries.updateEvent(index, newValue)"></InputText>
+                  </td>
+                  <td class="whitespace-nowrap lg:px-3 py-2 text-sm text-gray-500">
+                    <InputText placeholder="person, person" :value="element.people" @change="(newValue) => entries.updatePeople(index, newValue)"></InputText>
+                  </td>
+                  <td class="whitespace-nowrap lg:px-3 py-2 text-sm text-gray-500">
+                    <InputText placeholder="100" :value="element.percentage" @change="(newValue) => entries.updatePercentage(index, newValue)"></InputText>
+                  </td>
+                  <td class="relative whitespace-nowrap lg:pl-3 lg:pr-4 text-right text-sm font-medium">
+                    <button @click="() => {deleteDialogRow = index; showingDelete = true } " tabindex="-1" class="text-red-500 hover:text-red-900"
+                    >
+                      <TrashIcon class="w-6 h-6"></TrashIcon>
+                      <span class="sr-only">Remove, {{ element.name }}</span></button>
+                  </td>
+                </tr>
+              </template>
+            </draggable>
           </table>
-          <div class="flex flex-row justify-center p-2">
+          <div class="flex flex-row justify-center mt-4">
+            <div class="grow"></div>
             <ButtonSolid @click="entries.addEntry">Add entry</ButtonSolid>
+            <div class="grow flex flex-row justify-end">
+              <button @click="() => {showingDeleteShow = true } " tabindex="-1" class="text-red-500 hover:text-red-900 flex flex-row gap-2 border border-red-500 hover:border-red-900 rounded p-2">
+                Delete Show<TrashIcon class="w-6 h-6"></TrashIcon></button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <DeleteDialog v-model:showing="showingDelete" @delete="() => entries.removeEntry(deleteDialogRow)"></DeleteDialog>
+  <DeleteDialog v-model:showing="showingDeleteShow" @delete="() => entries.clear()"></DeleteDialog>
 </template>

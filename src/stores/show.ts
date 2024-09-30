@@ -3,10 +3,12 @@ import type {ProcessedEntry} from "@/stores/entries";
 import {ref, watch} from "vue";
 import {generateShow} from "@/lib/generator";
 import {download, generateCsv, mkConfig} from "export-to-csv";
+import {randomID} from "@/lib/helper";
 
 
 export type ShowEntry = {
   title: string;
+  id: string;
   entry: ProcessedEntry;
 }
 
@@ -30,6 +32,7 @@ export const useShowStore = defineStore('show', () => {
   function reset(entries: ProcessedEntry[]) {
     show.value = entries.map((entry) => {
       return {
+        id: randomID(),
         title: (entry.name !== "") ? entry.name : entry.event + " - " + entry.people.join(", "),
         entry
       }

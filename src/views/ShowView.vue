@@ -3,6 +3,7 @@ import {useEntryStore} from "@/stores/entries";
 import {useShowStore} from "@/stores/show";
 import TabReference from "@/components/TabReference.vue";
 import ButtonSolid from "@/components/ButtonSolid.vue";
+import draggable from 'vuedraggable'
 
 const entries = useEntryStore()
 const show = useShowStore()
@@ -37,14 +38,16 @@ const show = useShowStore()
               </th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="(entry, index) in show.show" :key="index">
-              <td>{{index+1}}</td>
-              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
-                {{entry.title}}
-              </td>
-            </tr>
-            </tbody>
+            <draggable class="divide-y divide-gray-200 bg-white" :list="show.show" item-key="id" tag="tbody" handle=".handle">
+              <template #item="{element, index}">
+                <tr>
+                  <td class="handle">{{index+1}}</td>
+                  <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                    {{element.title}}
+                  </td>
+                </tr>
+              </template>
+            </draggable>
           </table>
         </div>
       </div>

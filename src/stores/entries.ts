@@ -2,9 +2,13 @@ import {defineStore} from "pinia";
 import {ref, watch} from "vue";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import * as Papa from "papaparse"
+import {randomID} from "@/lib/helper";
+
+
 
 
 export type Entry = {
+  id: string
   name: string;
   event: string;
   people: string;
@@ -20,30 +24,35 @@ export type ProcessedEntry = {
 
 const DEFAULT_ENTRIES: Entry[] = [
   {
+    id: randomID(),
     name: "Bob's Part",
     event: "jumprope",
     people: "Bob",
     percentage: "",
   },
   {
+    id: randomID(),
     name: "",
     event: "yoyo",
     people: "Joe, John",
     percentage: "",
   },
   {
+    id: randomID(),
     name: "",
     event: "dance",
     people: "Joe",
     percentage: "100",
   },
   {
+    id: randomID(),
     name: "",
     event: "dance",
     people: "Billy, John",
     percentage: "",
   },
   {
+    id: randomID(),
     name: "",
     event: "singing",
     people: "Amy",
@@ -62,8 +71,12 @@ export const useEntryStore = defineStore('entries', () => {
     localStorage.setItem("entries", JSON.stringify(newValue));
   })
 
+  function clear() {
+    entries.value = []
+  }
+
   function addEntry() {
-    entries.value = entries.value.concat([{name: "", event: "", people: "",percentage:""}]);
+    entries.value = entries.value.concat([{name: "", event: "", people: "",percentage:"",id: randomID()}]);
   }
 
   function removeEntry(index: number) {
@@ -151,6 +164,7 @@ export const useEntryStore = defineStore('entries', () => {
       }else{
         entries.value = data.map(entry => {
           return {
+            id: randomID(),
             name: entry.name ?? "",
             event: entry.event ?? "",
             people: entry.people ?? "",
@@ -161,5 +175,5 @@ export const useEntryStore = defineStore('entries', () => {
     }
   }
 
-  return { entries, addEntry, removeEntry, updateName, updateEvent, updatePeople, updatePercentage, getProcessedValue, downloadCsv, uploadCsv };
+  return { entries, clear, addEntry, removeEntry, updateName, updateEvent, updatePeople, updatePercentage, getProcessedValue, downloadCsv, uploadCsv };
 })

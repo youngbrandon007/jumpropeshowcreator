@@ -25,7 +25,7 @@ const emits = defineEmits<{ (e: 'delete'): void}>()
                 <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                   <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">Delete row</DialogTitle>
                   <div class="mt-2">
-                    <p class="text-sm text-gray-500">Are you sure you want to delete this row? It will be permanently removed. This action cannot be undone.</p>
+                    <p class="text-sm text-gray-500">Are you sure you want to delete this? It will be permanently removed. This action cannot be undone.</p>
                   </div>
                 </div>
               </div>

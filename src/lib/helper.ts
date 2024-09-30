@@ -43,3 +43,8 @@ export function showEntriesToNumerical(entries: ShowEntry[]) {
     allEvents, eventToIndex, indexToEvent
   }
 }
+
+
+export function randomID() {
+  return crypto.randomUUID()
+}
