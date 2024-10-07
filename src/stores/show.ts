@@ -1,9 +1,10 @@
 import {defineStore} from "pinia";
 import type {ProcessedEntry} from "@/stores/entries";
-import {ref, watch} from "vue";
-import {generateShow} from "@/lib/generator";
 import {download, generateCsv, mkConfig} from "export-to-csv";
 import {randomID} from "@/lib/helper";
+import {DEFAULT_EVALUATOR, type EvaluatorSettings} from "@/lib/evaluator";
+import {DEFAULT_GENERATOR, generateShow, type GeneratorSettings} from "@/lib/generators";
+import {savedRef} from "@/lib/savedRef";
 
 
 export type ShowEntry = {
@@ -13,21 +14,22 @@ export type ShowEntry = {
 }
 
 
-
 export const useShowStore = defineStore('show', () => {
 
-  let savedValue: ShowEntry[] = []
-  try{
-    savedValue = JSON.parse(localStorage.getItem("show") ?? "[]") as ShowEntry[]
-  }catch(e) {
-    console.error(e)
-  }
 
-  const show = ref<ShowEntry[]>(savedValue);
+  let show = savedRef<ShowEntry[]>("show", [])
 
-  watch(show, (newValue) => {
-    localStorage.setItem("show", JSON.stringify(newValue));
-  })
+
+  // let initValueShow: Entry[] = JSON.parse(localStorage.getItem("show") ?? "null") ?? [] as ShowEntry[]
+  //
+  // const show = ref<ShowEntry[]>(initValueShow);
+  //
+  // watch(show, (newValue) => {
+  //   localStorage.setItem("show", JSON.stringify(newValue));
+  // })
+
+  const generatorSettings = savedRef<GeneratorSettings>("generatorSettings", DEFAULT_GENERATOR);
+  const evaluatorSettings = savedRef<EvaluatorSettings>("evaluatorSettings", DEFAULT_EVALUATOR);
 
   function reset(entries: ProcessedEntry[]) {
     show.value = entries.map((entry) => {
@@ -40,7 +42,7 @@ export const useShowStore = defineStore('show', () => {
   }
 
   function generate() {
-    const generatedShow = generateShow(show.value)
+    const generatedShow = generateShow(show.value, generatorSettings.value, evaluatorSettings.value)
 
     show.value = generatedShow.result
   }
@@ -59,5 +61,5 @@ export const useShowStore = defineStore('show', () => {
     download(csvConfig)(csv);
   }
 
-  return {show, reset, generate, downloadCsv}
+  return {show, generatorSettings, evaluatorSettings, reset, generate, downloadCsv}
 })

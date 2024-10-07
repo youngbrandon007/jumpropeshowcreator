@@ -1,28 +1,9 @@
 import type {ShowEntry} from "@/stores/show";
-import {type ProcessedShowEntry, showEntriesToNumerical} from "@/lib/helper";
-import {evaluateProcessedEntries} from "@/lib/evaluator";
+import {generateRandomShow, type ProcessedShowEntry, showEntriesToNumerical} from "@/lib/helper";
+import {type EvaluateFunctions, evaluateProcessedEntries} from "@/lib/evaluator";
 
 
-export function generateRandomShow(setEntries: (ProcessedShowEntry | null)[], entriesLeft: ProcessedShowEntry[]): ProcessedShowEntry[] {
-  const output: ProcessedShowEntry[] = []
-  const newEntriesLeft = entriesLeft.map(entry => entry)
-
-  const randomArray = crypto.getRandomValues(new Uint32Array(setEntries.length));
-  for(let i = 0; i < setEntries.length; i++) {
-    if(setEntries[i] !== null) {
-      output.push(setEntries[i]!);
-    }else{
-      const randomIndex = Math.floor(randomArray[0] * newEntriesLeft.length / (2**32));
-      // console.log(randomIndex)
-      output.push(newEntriesLeft.splice(randomIndex, 1)[0]);
-    }
-  }
-
-  return output
-}
-
-
-export function findNextBestIndexRandomly(setEntries: (ProcessedShowEntry | null)[], index: number, entriesLeft: ProcessedShowEntry[], randomCount: number, numberEvents: number, numberPeople: number): number {
+function findNextBestIndexRandomly(setEntries: (ProcessedShowEntry | null)[], index: number, entriesLeft: ProcessedShowEntry[], randomCount: number, numberEvents: number, numberPeople: number, evaluateFunction: EvaluateFunctions): number {
   if(setEntries[index] !== null) {
     throw Error("Internal Error in findNextBestIndexRandomly()")
   }
@@ -40,7 +21,7 @@ export function findNextBestIndexRandomly(setEntries: (ProcessedShowEntry | null
     for(let i = 0; i < randomCount; i++) {
       const randomShow = generateRandomShow(newSetEntries, newEntriesLeft)
 
-      const score = evaluateProcessedEntries(randomShow, Array(numberEvents).fill(-1), Array(numberPeople).fill(-1))
+      const score = evaluateProcessedEntries(randomShow, Array(numberEvents).fill(-1), Array(numberPeople).fill(-1), 0, evaluateFunction)
 
       totalScore += score
     }
@@ -56,7 +37,10 @@ export function findNextBestIndexRandomly(setEntries: (ProcessedShowEntry | null
 
 
 
-export function generateShow(entries: ShowEntry[]) {
+
+export type RandomGeneratorSettings = { name: "random", iterations: number}
+
+export function randomGeneratorGenerateShow(entries: ShowEntry[], settings: RandomGeneratorSettings, evaluateFunction: EvaluateFunctions) {
 
   const { processedEntries, personToIndex, indexToPerson, allPeople, allEvents, eventToIndex, indexToEvent } = showEntriesToNumerical(entries)
 
@@ -87,13 +71,13 @@ export function generateShow(entries: ShowEntry[]) {
     }
   }
 
-  const RANDOM_COUNT = 100
+  const RANDOM_COUNT = settings.iterations
 
   const startTime = performance.now()
 
   for(let i = 0; i < show.length; i++){
     if(show[i] === null) {
-      const nextIndex = findNextBestIndexRandomly(show, i, preparedEntries, RANDOM_COUNT, allEvents.size, allPeople.size)
+      const nextIndex = findNextBestIndexRandomly(show, i, preparedEntries, RANDOM_COUNT, allEvents.size, allPeople.size, evaluateFunction)
 
       show[i] = preparedEntries.splice(nextIndex, 1)[0]
     }

@@ -48,3 +48,21 @@ export function showEntriesToNumerical(entries: ShowEntry[]) {
 export function randomID() {
   return crypto.randomUUID()
 }
+
+export function generateRandomShow(setEntries: (ProcessedShowEntry | null)[], entriesLeft: ProcessedShowEntry[]): ProcessedShowEntry[] {
+  const output: ProcessedShowEntry[] = []
+  const newEntriesLeft = entriesLeft.map(entry => entry)
+
+  const randomArray = crypto.getRandomValues(new Uint32Array(setEntries.length));
+  for (let i = 0; i < setEntries.length; i++) {
+    if (setEntries[i] !== null) {
+      output.push(setEntries[i]!);
+    } else {
+      const randomIndex = Math.floor(randomArray[0] * newEntriesLeft.length / (2 ** 32));
+      // console.log(randomIndex)
+      output.push(newEntriesLeft.splice(randomIndex, 1)[0]);
+    }
+  }
+
+  return output
+}
