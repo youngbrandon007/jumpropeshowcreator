@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{ min: number | string; max: number | string }>()
 
-const value = defineModel<number>("value")
+const value = defineModel<string>("value")
 </script>
 
 <template>

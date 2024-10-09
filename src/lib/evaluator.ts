@@ -59,17 +59,6 @@ export function evaluateSingleEntry(processedEntry: ProcessedShowEntry, lastEven
 
 
 
-// Must work for fractional values
-// Deprecated
-export function evaluateScoreDistance(dis: number) {
-  // return Math.sqrt(Math.abs(dis))
-  // return Math.log2(Math.abs(dis))
-  return (Math.abs(dis) <= 1) ? 0 : (Math.abs(dis) <= 2) ? 10 : 15;
-  // return 1-Math.exp(-.25*Math.abs(dis))
-}
-
-
-
 export type EvaluatorSettings = {
   encourageEventMinimumSpacing: number
   encourageEventMinimumSpacingStrength: number
