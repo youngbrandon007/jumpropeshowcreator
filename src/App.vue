@@ -1,17 +1,23 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {RouterView, useRouter} from 'vue-router'
 import SidebarLayout from "@/components/SidebarLayout.vue";
+import {onMounted, watch} from "vue";
+
+const router = useRouter()
+
+onMounted(checkRedirect)
+watch(router.currentRoute, checkRedirect)
+
+function checkRedirect() {
+  const fullPath = router.currentRoute.value.fullPath
+
+  if(fullPath.startsWith("/?/")){
+    router.push(fullPath.substring(3))
+  }
+}
 </script>
 
 <template>
-<!--  <header>-->
-<!--    <div>-->
-<!--      <h1 class="text-2xl text-black font-bold">Jump Rope Show Creator</h1>-->
-<!--    </div>-->
-<!--  </header>-->
-
-<!--  <RouterView />-->
-
   <SidebarLayout>
     <RouterView />
   </SidebarLayout>
