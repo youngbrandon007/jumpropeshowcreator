@@ -151,7 +151,9 @@ const closePersonIndexes = computed(() => {
           <div class="flex flex-row items-center gap-2">
             <h1 class="text-base leading-6 text-gray-900">Close Repeated Events </h1>
             <div class="grow"></div>
-            <InputSlider :min="0" :max="10" :value="closeEventDistance.toFixed()" @update:value="(newValue) => { closeEventDistance = Number(newValue)}" class="w-40"></InputSlider>
+            <div class="w-40">
+              <InputSlider :min="0" :max="10" :value="closeEventDistance.toFixed()" @update:value="(newValue) => { closeEventDistance = Number(newValue)}"></InputSlider>
+            </div>
             <p class="w-4 text-right">≤{{closeEventDistance}}</p>
           </div>
           <div class="flex flex-col gap-2">
@@ -172,7 +174,9 @@ const closePersonIndexes = computed(() => {
           <div class="flex flex-row items-center gap-2">
             <h1 class="text-base leading-6 text-gray-900">Close Repeated People </h1>
             <div class="grow"></div>
-            <InputSlider :min="0" :max="10" :value="closePersonDistance.toFixed()" @update:value="(newValue) => { closePersonDistance = Number(newValue)}" class="w-40"></InputSlider>
+            <div class="w-40">
+              <InputSlider :min="0" :max="10" :value="closePersonDistance.toFixed()" @update:value="(newValue) => { closePersonDistance = Number(newValue)}"></InputSlider>
+            </div>
             <p class="w-4 text-right">≤{{closePersonDistance}}</p>
           </div>
           <div class="flex flex-col gap-2">
